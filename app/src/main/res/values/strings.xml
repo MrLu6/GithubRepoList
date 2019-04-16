@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GithubRepoList</string>
+    <string-array name="repo_list">
+        <item>Mix Converter</item>
+        <item>Scratch Paper</item>
+        <item>Have Fun</item>
+    </string-array>
 </resources>
