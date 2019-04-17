@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewSateHandler.initViews();
         viewSateHandler.initSwipeRefresh();
+        swipeRefresh();
 
     }
 

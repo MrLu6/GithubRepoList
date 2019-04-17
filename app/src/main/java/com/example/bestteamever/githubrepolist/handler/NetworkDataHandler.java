@@ -26,7 +26,6 @@ public class NetworkDataHandler implements handlerService{
     private String TAG = "NetworkDataHandler";
     private Context context;
     private SharedPrefManager sharedPrefManager;
-    private ViewSateHandler viewSateHandler;
     public final static int NULL_RESPONSE = 0;
     public final static int ZERO_RESPONSE = 1;
     public final static int SOME_RESPONSE = 2;
@@ -79,8 +78,9 @@ public class NetworkDataHandler implements handlerService{
                             Log.d(TAG,"get some response in loadJason" );
                             sharedPrefManager.setAPIResponse(response.body());
                             sharedPrefManager.setResponseStatus(SOME_RESPONSE);
-                            viewDisplay(SOME_RESPONSE);
                         }
+
+                        viewDisplay(sharedPrefManager.getResponseStatus());
 
                     }
 

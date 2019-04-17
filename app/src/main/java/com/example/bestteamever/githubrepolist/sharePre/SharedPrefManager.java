@@ -54,7 +54,7 @@ public class SharedPrefManager {
     }
 
     public int getResponseStatus(){
-        return sharedPref.getInt(res.getString(R.string.api_response),0);
+        return sharedPref.getInt(res.getString(R.string.response_status),0);
     }
 
 
