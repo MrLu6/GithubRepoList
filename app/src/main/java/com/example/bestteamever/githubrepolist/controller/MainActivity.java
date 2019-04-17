@@ -29,10 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = "MainActivity";
     /* Use recycleView when needs to display a scrolling list of elements based on large data sets */
-    private RecyclerView recyclerView;
+    public RecyclerView recyclerView;
 
     /* Used whenever the user can refresh the contents of a view via a vertical swipe gesture. */
-    private SwipeRefreshLayout swipeContainer;
+    public SwipeRefreshLayout swipeContainer;
 
     /*Use for store data locally*/
     private SharedPrefManager sharedPrefManager;

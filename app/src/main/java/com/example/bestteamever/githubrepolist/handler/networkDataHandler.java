@@ -11,7 +11,10 @@ import com.example.bestteamever.githubrepolist.api.GitHubClient;
 import com.example.bestteamever.githubrepolist.controller.MainActivity;
 import com.example.bestteamever.githubrepolist.model.GitHubRepo;
 import com.example.bestteamever.githubrepolist.sharePre.SharedPrefManager;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,11 +26,9 @@ public class networkDataHandler implements handlerService{
     private String TAG = "networkDataHandler";
     private Context context;
     private SharedPrefManager sharedPrefManager;
-    private final int NULL_RESPONSE = 0;
-    private final int ZERO_RESPONSE = 1;
-    private final int SOME_RESPONSE = 2;
-
-
+    public final static int NULL_RESPONSE = 0;
+    public final static int ZERO_RESPONSE = 1;
+    public final static int SOME_RESPONSE = 2;
 
     public networkDataHandler(Context context){
         this.context = context;
@@ -91,5 +92,14 @@ public class networkDataHandler implements handlerService{
             }
 
         return 0;
+    }
+
+    public static List<GitHubRepo> convertJsonData(String json){
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<GitHubRepo>>() {}.getType();
+        List<GitHubRepo> repoList = gson.fromJson(json, type);
+
+        return  repoList;
     }
 }
