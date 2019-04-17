@@ -19,6 +19,7 @@ import com.example.bestteamever.githubrepolist.R;
 import com.example.bestteamever.githubrepolist.api.Client;
 import com.example.bestteamever.githubrepolist.api.GitHubClient;
 import com.example.bestteamever.githubrepolist.model.GitHubRepo;
+import com.example.bestteamever.githubrepolist.sharePre.SharedPrefManager;
 
 import java.util.List;
 
@@ -28,40 +29,44 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String TAG = "MainActivity";
     private RecyclerView recyclerView;
-    TextView Disconnected;
+    private TextView Disconnected;
     private SwipeRefreshLayout swipeContainer;
-    private String userName= "";
-    private String TAG = " MainActivity";
+    private SharedPrefManager sharedPrefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sharedPrefManager = new SharedPrefManager(this.getApplicationContext());
 
         initViews();
+        initSwipeRefresh();
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-
-        swipeContainer.setColorSchemeResources(android.R.color.holo_orange_dark);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
-            @Override
-            public void onRefresh(){
-                loadJSON(userName);
-                Toast.makeText(MainActivity.this, "Github Users Refreshed", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void initViews(){
         recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.smoothScrollToPosition(0);
-        loadJSON(userName);
+        loadJSON(sharedPrefManager.getSearchUserName());
+    }
+
+    private void initSwipeRefresh(){
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+
+        swipeContainer.setColorSchemeResources(android.R.color.holo_orange_dark);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh(){
+                loadJSON(sharedPrefManager.getSearchUserName());
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.refresh_promt), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //https://www.youtube.com/watch?v=R4XU8yPzSx0
-
     private void loadJSON(String userName){
         Disconnected = (TextView) findViewById(R.id.disconnected);
         try{
@@ -72,30 +77,36 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<List<GitHubRepo>>() {
                 @Override
                 public void onResponse(Call<List<GitHubRepo>> call, Response<List<GitHubRepo>> response) {
-                    Log.d("Fun",response.toString());
-                    List<GitHubRepo> repos = response.body();
-                    Log.d("Fun","onResponsegood" );
-                    if(repos == null){
-                        Log.d("Fun","response is null" );
-                    }
 
-                    //Log.d("Fun",repos.get(1).getName().toString() );
-                    recyclerView.setAdapter(new ItemAdapter(getApplicationContext(), repos));
-                    recyclerView.smoothScrollToPosition(0);
-                    swipeContainer.setRefreshing(false);
+                    List<GitHubRepo> repos = response.body();
+
+                    //Check if response in Logcat
+                    Log.d(TAG,"onResponse Success" );
+
+                    //Check if response is null (api limit rate can cause 403 forbidden and return null)
+                    if(repos == null){
+                        Log.d(TAG,"response is null" );
+
+                    }else if(repos.size() == 0){
+                        Log.d(TAG,"response.size == 0" );
+                    }else {
+                        recyclerView.setAdapter(new ItemAdapter(getApplicationContext(), repos));
+                        recyclerView.smoothScrollToPosition(0);
+                        swipeContainer.setRefreshing(false);
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<List<GitHubRepo>> call, Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    Toast.makeText(MainActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG + "Error", t.getMessage());
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.error_fecth), Toast.LENGTH_SHORT).show();
                     Disconnected.setVisibility(View.VISIBLE);
 
                 }
             });
 
         }catch (Exception e){
-            Log.d("Error", e.getMessage());
+            Log.d(TAG + "Error", e.getMessage());
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -110,15 +121,15 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                userName = s;
-                loadJSON(userName);
+                sharedPrefManager.setSearchUserName(s);
+                loadJSON(sharedPrefManager.getSearchUserName());
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                userName = s;
-                loadJSON(userName);
+                sharedPrefManager.setSearchUserName(s);
+                loadJSON(sharedPrefManager.getSearchUserName());
                 return false;
             }
         });

@@ -17,14 +17,18 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<GitHubRepo> gitHubRepos;
     private Context context;
 
-    public ItemAdapter(Context applicationContext, List<GitHubRepo> itemArrayList) {
+
+    public ItemAdapter(Context applicationContext, List<GitHubRepo> gitHubReposList) {
         this.context = applicationContext;
-        this.gitHubRepos = itemArrayList;
+        this.gitHubRepos = gitHubReposList;
     }
 
+
+    //https://www.reddit.com/r/androiddev/comments/3bjnxi/best_way_to_handle_recyclerview_empty_state/
     @Override
     public ItemAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_user, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_repo, viewGroup, false);
+
         return new ViewHolder(view);
     }
 
@@ -60,5 +64,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             avatarImage = (ImageView) view.findViewById(R.id.avatar);
         }
     }
+
 }
 

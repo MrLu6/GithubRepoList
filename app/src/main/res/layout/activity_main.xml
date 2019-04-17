@@ -20,4 +20,5 @@
         android:text="internet"
         android:textStyle="bold"
         android:textSize="30sp"/>
+
 </android.support.v4.widget.SwipeRefreshLayout>
