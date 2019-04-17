@@ -1,6 +1,5 @@
 package com.example.bestteamever.githubrepolist.controller;
 
-import android.app.ProgressDialog;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     TextView Disconnected;
     private SwipeRefreshLayout swipeContainer;
+    private String userName= "";
+    private String TAG = " MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh(){
-                loadJSON();
+                loadJSON(userName);
                 Toast.makeText(MainActivity.this, "Github Users Refreshed", Toast.LENGTH_SHORT).show();
             }
         });
@@ -56,17 +57,17 @@ public class MainActivity extends AppCompatActivity {
         recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.smoothScrollToPosition(0);
-        loadJSON();
+        loadJSON(userName);
     }
 
     //https://www.youtube.com/watch?v=R4XU8yPzSx0
 
-    private void loadJSON(){
+    private void loadJSON(String userName){
         Disconnected = (TextView) findViewById(R.id.disconnected);
         try{
 
             GitHubClient client =  Client.getClient().create(GitHubClient.class);
-            Call<List<GitHubRepo>> call = client.reposForUser("airbnb");
+            Call<List<GitHubRepo>> call = client.reposForUser(userName);
 
             call.enqueue(new Callback<List<GitHubRepo>>() {
                 @Override
@@ -109,11 +110,15 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                userName = s;
+                loadJSON(userName);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+                userName = s;
+                loadJSON(userName);
                 return false;
             }
         });
