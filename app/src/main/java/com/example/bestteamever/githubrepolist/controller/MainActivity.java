@@ -9,12 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bestteamever.githubrepolist.ItemAdapter;
+import com.example.bestteamever.githubrepolist.adapter.ItemAdapter;
 import com.example.bestteamever.githubrepolist.R;
 import com.example.bestteamever.githubrepolist.api.Client;
 import com.example.bestteamever.githubrepolist.api.GitHubClient;
@@ -30,17 +28,21 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = "MainActivity";
+    /* Use recycleView when needs to display a scrolling list of elements based on large data sets */
     private RecyclerView recyclerView;
-    private TextView Disconnected;
+
+    /* Used whenever the user can refresh the contents of a view via a vertical swipe gesture. */
     private SwipeRefreshLayout swipeContainer;
+
+    /*Use for store data locally*/
     private SharedPrefManager sharedPrefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPrefManager = new SharedPrefManager(this.getApplicationContext());
 
+        sharedPrefManager = new SharedPrefManager(this.getApplicationContext());
         initViews();
         initSwipeRefresh();
 
@@ -55,8 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initSwipeRefresh(){
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-
         swipeContainer.setColorSchemeResources(android.R.color.holo_orange_dark);
+
+        //Refresh search(request and get respond base on the user input)
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh(){
@@ -66,14 +69,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //https://www.youtube.com/watch?v=R4XU8yPzSx0
+    /**
+     * Make get Request to user repo info and get response
+     * tutorial: https://www.youtube.com/watch?v=R4XU8yPzSx0
+     * @param userName: gitHub userName that user want to search
+     */
     private void loadJSON(String userName){
-        Disconnected = (TextView) findViewById(R.id.disconnected);
+
         try{
 
+            //Use Retrofit to Handle Http get request
             GitHubClient client =  Client.getClient().create(GitHubClient.class);
+
+            // Call -> An invocation of a Retrofit method that sends a request to a webserver and returns a response.
             Call<List<GitHubRepo>> call = client.reposForUser(userName);
 
+            /**
+             * Asynchronously send the request and notify callback of its response or if an error
+             * occurred talking to the server, creating the request, or processing the response.
+             */
             call.enqueue(new Callback<List<GitHubRepo>>() {
                 @Override
                 public void onResponse(Call<List<GitHubRepo>> call, Response<List<GitHubRepo>> response) {
@@ -90,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     }else if(repos.size() == 0){
                         Log.d(TAG,"response.size == 0" );
                     }else {
+                        //set Adapter if we get some response
                         recyclerView.setAdapter(new ItemAdapter(getApplicationContext(), repos));
                         recyclerView.smoothScrollToPosition(0);
                         swipeContainer.setRefreshing(false);
@@ -100,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onFailure(Call<List<GitHubRepo>> call, Throwable t) {
                     Log.d(TAG + "Error", t.getMessage());
                     Toast.makeText(MainActivity.this, getResources().getString(R.string.error_fecth), Toast.LENGTH_SHORT).show();
-                    Disconnected.setVisibility(View.VISIBLE);
 
                 }
             });
@@ -119,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.search_repo);
         SearchView searchView = (SearchView)item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            //search given username's gitHub repo
             @Override
             public boolean onQueryTextSubmit(String s) {
                 sharedPrefManager.setSearchUserName(s);
@@ -128,8 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                sharedPrefManager.setSearchUserName(s);
-                loadJSON(sharedPrefManager.getSearchUserName());
                 return false;
             }
         });
