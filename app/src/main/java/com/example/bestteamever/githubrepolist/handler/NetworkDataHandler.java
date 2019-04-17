@@ -5,10 +5,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.bestteamever.githubrepolist.R;
-import com.example.bestteamever.githubrepolist.adapter.ItemAdapter;
 import com.example.bestteamever.githubrepolist.api.Client;
 import com.example.bestteamever.githubrepolist.api.GitHubClient;
-import com.example.bestteamever.githubrepolist.controller.MainActivity;
 import com.example.bestteamever.githubrepolist.model.GitHubRepo;
 import com.example.bestteamever.githubrepolist.sharePre.SharedPrefManager;
 import com.google.gson.Gson;
@@ -21,18 +19,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class networkDataHandler implements handlerService{
+import static com.example.bestteamever.githubrepolist.handler.ViewSateHandler.viewDisplay;
 
-    private String TAG = "networkDataHandler";
+public class NetworkDataHandler implements handlerService{
+
+    private String TAG = "NetworkDataHandler";
     private Context context;
     private SharedPrefManager sharedPrefManager;
+    private ViewSateHandler viewSateHandler;
     public final static int NULL_RESPONSE = 0;
     public final static int ZERO_RESPONSE = 1;
     public final static int SOME_RESPONSE = 2;
 
-    public networkDataHandler(Context context){
+    public NetworkDataHandler(Context context){
         this.context = context;
         sharedPrefManager = new SharedPrefManager(this.context);
+
     }
 
     /**
@@ -41,7 +43,7 @@ public class networkDataHandler implements handlerService{
      * @param userName: gitHub userName that user want to search
      */
     @Override
-    public int loadJSON(String userName) {
+    public void loadJSON(String userName) {
 
             try{
 
@@ -74,8 +76,12 @@ public class networkDataHandler implements handlerService{
                             sharedPrefManager.setResponseStatus(ZERO_RESPONSE);
                         }else {
                             //set Adapter if we get some response
+                            Log.d(TAG,"get some response in loadJason" );
+                            sharedPrefManager.setAPIResponse(response.body());
                             sharedPrefManager.setResponseStatus(SOME_RESPONSE);
+                            viewDisplay(SOME_RESPONSE);
                         }
+
                     }
 
                     @Override
@@ -91,7 +97,6 @@ public class networkDataHandler implements handlerService{
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
             }
 
-        return 0;
     }
 
     public static List<GitHubRepo> convertJsonData(String json){

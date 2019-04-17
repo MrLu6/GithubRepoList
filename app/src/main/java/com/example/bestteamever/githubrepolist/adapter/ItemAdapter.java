@@ -2,6 +2,7 @@ package com.example.bestteamever.githubrepolist.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
+    private String TAG = "ItemAdapte";
     private List<GitHubRepo> gitHubRepos;
     private Context context;
 
@@ -65,6 +67,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         if (gitHubRepos == null){
             return 0;
         }
+        Log.d(TAG,"repos.size" + String.valueOf(gitHubRepos.size()));
         return gitHubRepos.size();
     }
 

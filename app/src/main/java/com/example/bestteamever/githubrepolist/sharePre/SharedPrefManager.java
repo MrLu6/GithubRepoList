@@ -36,10 +36,10 @@ public class SharedPrefManager {
 
     /*Store api response*/
     //https://stackoverflow.com/questions/28107647/how-to-save-listobject-to-sharedpreferences/28107791
-    public <T> void setAPIResponse(String response, List<T> list) {
+    public <T> void setAPIResponse(List<T> list) {
         Gson gson = new Gson();
         String json = gson.toJson(list);
-        editor.putString(res.getString(R.string.api_response),response);
+        editor.putString(res.getString(R.string.api_response),json);
         editor.apply();
     }
 
