@@ -23,9 +23,9 @@ public class networkDataHandler implements handlerService{
     private String TAG = "networkDataHandler";
     private Context context;
     private SharedPrefManager sharedPrefManager;
-    private final int NULL_RESONSE = 0;
-    private final int ZERO_RESONSE = 1;
-    private final int SOME_RESONSE = 0;
+    private final int NULL_RESPONSE = 0;
+    private final int ZERO_RESPONSE = 1;
+    private final int SOME_RESPONSE = 2;
 
 
 
@@ -66,14 +66,14 @@ public class networkDataHandler implements handlerService{
                         //Check if response is null (api limit rate can cause 403 forbidden and return null)
                         if(repos == null){
                             Log.d(TAG,"response is null" );
-                            sharedPrefManager.setResponseStatus(NULL_RESONSE);
+                            sharedPrefManager.setResponseStatus(NULL_RESPONSE);
 
                         }else if(repos.size() == 0){
                             Log.d(TAG,"response.size == 0" );
-                            sharedPrefManager.setResponseStatus(ZERO_RESONSE);
+                            sharedPrefManager.setResponseStatus(ZERO_RESPONSE);
                         }else {
                             //set Adapter if we get some response
-                            sharedPrefManager.setResponseStatus(SOME_RESONSE);
+                            sharedPrefManager.setResponseStatus(SOME_RESPONSE);
                         }
                     }
 
