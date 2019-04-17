@@ -1,43 +1,52 @@
 package com.example.bestteamever.githubrepolist;
 
+import android.app.ProgressDialog;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView search_repo;
-    ArrayAdapter<String> adapter;
+        private RecyclerView recyclerView;
+        TextView Disconnected;
+        private SwipeRefreshLayout swipeContainer;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
 
-        search_repo = (ListView) findViewById(R.id.search_repo);
+            initViews();
 
-        ArrayList<String> repoList = new ArrayList<>();
-        repoList.addAll(Arrays.asList(getResources().getStringArray(R.array.repo_list)));
+            swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+            swipeContainer.setColorSchemeResources(android.R.color.holo_orange_dark);
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+                @Override
+                public void onRefresh(){
+                    //loadJSON();
+                    Toast.makeText(MainActivity.this, "Github Users Refreshed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-        adapter = new ArrayAdapter<String>(
-                MainActivity.this,
-                android.R.layout.simple_list_item_1,
-                repoList
-        );
+        private void initViews(){
+            recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            recyclerView.smoothScrollToPosition(0);
+            //loadJSON();
+        }
 
-        search_repo.setAdapter(adapter);
 
-    }
-
-    @Override
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
@@ -52,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                adapter.getFilter().filter(s);
                 return false;
             }
         });
