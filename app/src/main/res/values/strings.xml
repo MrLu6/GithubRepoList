@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">GithubRepoList</string>
+
+    <!-- SharedPreferences -->
+    <string name="user_prefs">userPrefs</string>
+    <string name="search_user_name">userName</string>
+    <string name="emptyString">""</string>
+    <string name="api_response">api_response</string>
+    <string name="response_status">response_status</string>
+
+    <!--MainActivity-->
+    <string name="error_fecth">Error Fetching Data!</string>
+    <string name="refresh_promt">Github Users Refreshed</string>
+
+    <!--search_menu.xml-->
+    <string name="search_gitHub_user_repo">Search GitHub User Repo</string>
+
+    <string name="repo_not_found">Repo Not Found</string>
+    
+
 </resources>
