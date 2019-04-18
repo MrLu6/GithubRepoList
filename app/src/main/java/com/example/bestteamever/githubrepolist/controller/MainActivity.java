@@ -42,11 +42,12 @@ public class MainActivity extends AppCompatActivity {
         viewSateHandler.initViews();
         viewSateHandler.initSwipeRefresh();
         swipeRefresh();
+        networkDataHandler.loadJSON(sharedPrefManager.getSearchUserName());
 
     }
 
+    //Refresh search(request and get respond base on the user input)
     private void swipeRefresh(){
-        //Refresh search(request and get respond base on the user input)
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh(){

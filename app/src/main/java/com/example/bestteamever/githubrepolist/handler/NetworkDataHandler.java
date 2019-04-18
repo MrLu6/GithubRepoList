@@ -80,7 +80,7 @@ public class NetworkDataHandler implements handlerService{
                             sharedPrefManager.setResponseStatus(SOME_RESPONSE);
                         }
 
-                        viewDisplay(sharedPrefManager.getResponseStatus());
+                        viewDisplay();
 
                     }
 

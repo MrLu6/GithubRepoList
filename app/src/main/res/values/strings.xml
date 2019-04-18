@@ -14,6 +14,8 @@
 
     <!--search_menu.xml-->
     <string name="search_gitHub_user_repo">Search GitHub User Repo</string>
+
+    <string name="repo_not_found">Repo Not Found</string>
     
 
 </resources>

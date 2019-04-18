@@ -4,13 +4,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
 import com.example.bestteamever.githubrepolist.R;
-import com.example.bestteamever.githubrepolist.adapter.ItemAdapter;
+import com.example.bestteamever.githubrepolist.adapter.RepoListAdapter;
 import com.example.bestteamever.githubrepolist.controller.MainActivity;
 import com.example.bestteamever.githubrepolist.sharePre.SharedPrefManager;
 
-import static com.example.bestteamever.githubrepolist.handler.NetworkDataHandler.NULL_RESPONSE;
-import static com.example.bestteamever.githubrepolist.handler.NetworkDataHandler.SOME_RESPONSE;
-import static com.example.bestteamever.githubrepolist.handler.NetworkDataHandler.ZERO_RESPONSE;
 import static com.example.bestteamever.githubrepolist.handler.NetworkDataHandler.convertJsonData;
 
 public class ViewSateHandler implements viewStateHandlerService{
@@ -38,20 +35,11 @@ public class ViewSateHandler implements viewStateHandlerService{
     }
 
 
-    public static void viewDisplay(int viewType) {
+    public static void viewDisplay() {
         Log.d(TAG,"ViewDisplay get Called");
-        Log.d(TAG,"ViewType Num: " + String.valueOf(viewType));
-        switch(viewType) {
-            case NULL_RESPONSE:
-                break;
-            case ZERO_RESPONSE:
+        mainActivity.recyclerView.setAdapter(new RepoListAdapter(mainActivity, convertJsonData(sharedPrefManager.getAPIResponse())));
+        mainActivity.recyclerView.smoothScrollToPosition(0);
+        mainActivity.swipeContainer.setRefreshing(false);
 
-                break;
-            case SOME_RESPONSE:
-                Log.d(TAG,"Get SomeResponse in ViewDisplay");
-                mainActivity.recyclerView.setAdapter(new ItemAdapter(mainActivity, convertJsonData(sharedPrefManager.getAPIResponse())));
-                mainActivity.recyclerView.smoothScrollToPosition(0);
-                break;
-        }
     }
 }

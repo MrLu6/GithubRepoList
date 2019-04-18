@@ -5,6 +5,4 @@ public interface viewStateHandlerService {
     void initViews();
     void initSwipeRefresh();
 
-
-
 }
