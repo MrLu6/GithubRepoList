@@ -99,6 +99,7 @@ public class NetworkDataHandler implements handlerService{
 
     }
 
+    //retrieve response data and convert it to  List<GitHubRepo>
     public static List<GitHubRepo> convertJsonData(String json){
 
         Gson gson = new Gson();

@@ -13,6 +13,11 @@ public class GitHubRepo {
         return name;
     }
 
+    public String setName() {
+        return this.name = name;
+    }
+
+
     @SerializedName("stargazers_count")
     @Expose
     private int stargazers_count;
@@ -21,6 +26,11 @@ public class GitHubRepo {
         return stargazers_count;
     }
 
+    public void setStargazers_count() {
+        this.stargazers_count = stargazers_count;
+    }
+
+
     @SerializedName("owner")
     @Expose
     private GitHubOwner gitHubOwner;
@@ -28,4 +38,9 @@ public class GitHubRepo {
     public GitHubOwner getOwner() {
         return gitHubOwner;
     }
+
+    public void setGitHubOwner() {
+        this.gitHubOwner = gitHubOwner;
+    }
+
 }

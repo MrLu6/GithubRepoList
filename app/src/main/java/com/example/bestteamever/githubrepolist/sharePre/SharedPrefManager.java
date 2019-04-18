@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import java.util.List;
 
 public class SharedPrefManager {
+
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     public Resources res;
@@ -24,7 +25,6 @@ public class SharedPrefManager {
     }
 
     /*Search User Information*/
-
     public void setSearchUserName(String userName) {
         editor.putString(res.getString(R.string.search_user_name),userName);
         editor.apply();

@@ -34,7 +34,7 @@ public class ViewSateHandler implements viewStateHandlerService{
         mainActivity.swipeContainer.setColorSchemeResources(android.R.color.holo_orange_dark);
     }
 
-
+    /*Pass response to the list adapter*/
     public static void viewDisplay() {
         Log.d(TAG,"ViewDisplay get Called");
         mainActivity.recyclerView.setAdapter(new RepoListAdapter(mainActivity, convertJsonData(sharedPrefManager.getAPIResponse())));
